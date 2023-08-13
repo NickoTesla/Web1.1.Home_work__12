@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+import uvicorn
 
 from src.database.db import get_db
 
-from src.routes import contacts
+from src.routes import contacts, auth
 
 
 app = FastAPI()
@@ -15,6 +16,7 @@ def read_root():
     return {"message": "Application started"}
 
 app.include_router(contacts.router, prefix='/api')
+app.include_router(auth.router, prefix='/api')
 
 
 
@@ -29,3 +31,6 @@ def healthchecker(db: Session = Depends(get_db)):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="Error connecting to the database")
+
+if __name__ == "__main__":
+    uvicorn.run(app)

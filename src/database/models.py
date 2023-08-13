@@ -4,10 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 from datetime import date
 
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
-from sqlalchemy.orm import Mapped, Column, relationship
+from sqlalchemy import ForeignKey, DateTime, func
+from sqlalchemy.orm import Mapped, relationship
 
-from src.database.db import Base
 
 Base = declarative_base()
 
