@@ -2,21 +2,21 @@ import logging
 
 from libgravatar import Gravatar
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from src.database.models import User
 from src.schemas import UserSchema
 
 
-async def get_user_by_email(email: str, db: AsyncSession) -> User:
+async def get_user_by_email(email: str, db: Session) -> User:
     sq = select(User).filter_by(email=email)
-    result = await db.execute(sq)
+    result = db.execute(sq)
     user = result.scalar_one_or_none()
     logging.info(user)
     return user
 
 
-async def create_user(body: UserSchema, db: AsyncSession) -> User:
+async def create_user(body: UserSchema, db: Session) -> User:
     avatar = None
     try:
         g = Gravatar(body.email)
@@ -30,6 +30,6 @@ async def create_user(body: UserSchema, db: AsyncSession) -> User:
     return new_user
 
 
-async def update_token(user: User, token: str | None, db: AsyncSession) -> None:
+async def update_token(user: User, token: str | None, db: Session) -> None:
     user.refresh_token = token
     await db.commit()

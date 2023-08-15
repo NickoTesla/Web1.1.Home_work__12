@@ -23,8 +23,8 @@ class Contact(Base):
     additional_data = Column(String)
     created_at: Mapped[date] = Column('created_at', DateTime, default=func.now(), nullable=True)
     updated_at: Mapped[date] = Column('updated_at', DateTime, default=func.now(), onupdate=func.now(), nullable = True)
-    user: Mapped[int] = Column(Integer, ForeignKey("users.id"), nullable=True)
-    user: Mapped["User"] = relationship('User', backref='contact') 
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
+    user = relationship('User', backref="contacts")
 
 
 class User(Base):
