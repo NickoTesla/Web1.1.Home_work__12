@@ -9,11 +9,7 @@ from src.schemas import UserSchema
 
 
 async def get_user_by_email(email: str, db: Session) -> User:
-    sq = select(User).filter_by(email=email)
-    result = db.execute(sq)
-    user = result.scalar_one_or_none()
-    logging.info(user)
-    return user
+    return db.query(User).filter(User.email == email).first()
 
 
 async def create_user(body: UserSchema, db: Session) -> User:
@@ -25,8 +21,8 @@ async def create_user(body: UserSchema, db: Session) -> User:
         logging.error(e)
     new_user = User(**body.model_dump(), avatar=avatar)  # User(username=username, email=email, password=password)
     db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
+    db.commit()
+    db.refresh(new_user)
     return new_user
 
 
